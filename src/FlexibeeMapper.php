@@ -113,10 +113,11 @@ class FlexibeeMapper extends \UniMapper\Mapper
      * @param array   $orderBy
      * @param integer $limit
      * @param integer $offset
+     * @param array   $associations
      *
      * @return array|false
      */
-    public function findAll($resource, array $selection, array $conditions, array $orderBy, $limit = 0, $offset = 0)
+    public function findAll($resource, array $selection = [], array $conditions = [], array $orderBy = [], $limit = 0, $offset = 0, array $associations = [])
     {
         // Get URL
         $url = rawurlencode($resource);
@@ -137,7 +138,9 @@ class FlexibeeMapper extends \UniMapper\Mapper
         $parameters[] = "limit=" . (int) $limit;
 
         // Add custom fields from entity properties definitions
-        $parameters[] = "detail=custom:" . rawurlencode(implode(",", $this->escapeProperties($selection)));
+        if ($selection) {
+            $parameters[] = "detail=custom:" . rawurlencode(implode(",", $this->escapeProperties($selection)));
+        }
 
         // Try to get IDs as 'code:...'
         $parameters[] = "code-as-id=true";
